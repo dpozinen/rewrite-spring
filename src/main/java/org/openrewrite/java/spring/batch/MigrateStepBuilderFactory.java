@@ -48,8 +48,8 @@ public class MigrateStepBuilderFactory extends Recipe {
             @Override
             public J visitMethodInvocation(J.MethodInvocation method, ExecutionContext ctx) {
                 if (STEP_BUILDER_FACTORY.matches(method)) {
-                    ClassDeclaration clazz = getCursor().firstEnclosingOrThrow(ClassDeclaration.class);
-                    MethodDeclaration enclosingMethod = getCursor().firstEnclosingOrThrow(MethodDeclaration.class);
+                    J.ClassDeclaration clazz = getCursor().firstEnclosingOrThrow(J.ClassDeclaration.class);
+                    J.MethodDeclaration enclosingMethod = getCursor().firstEnclosingOrThrow(J.MethodDeclaration.class);
 
                     maybeAddImport("org.springframework.batch.core.step.builder.StepBuilder", false);
                     maybeRemoveImport("org.springframework.batch.core.configuration.annotation.StepBuilderFactory");
@@ -75,11 +75,10 @@ public class MigrateStepBuilderFactory extends Recipe {
 
     private static class RemoveStepBuilderFactoryVisitor extends JavaIsoVisitor<ExecutionContext> {
 
-        private final ClassDeclaration scope;
+        private final J.ClassDeclaration scope;
+        private final J.MethodDeclaration enclosingMethod;
 
-        private final MethodDeclaration enclosingMethod;
-
-        public RemoveStepBuilderFactoryVisitor(ClassDeclaration scope, MethodDeclaration enclosingMethod) {
+        public RemoveStepBuilderFactoryVisitor(J.ClassDeclaration scope, J.MethodDeclaration enclosingMethod) {
             this.scope = scope;
             this.enclosingMethod = enclosingMethod;
         }
